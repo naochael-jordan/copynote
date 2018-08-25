@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/naochael-jordan/copynote/issues"
   },
-  "homepage": "https://github.com/naochael-jordan/copynote#readme"
+  "homepage": "https://github.com/naochael-jordan/copynote#readme",
+  "devDependencies": {
+    "electron": "^2.0.8"
+  }
 }
