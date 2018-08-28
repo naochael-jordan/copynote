@@ -1,15 +1,12 @@
 import React from 'react';
 import { render } from 'react-dom';
+import Main from './Main';
 
 render(
-  <div>hogehoge</div>,
+  <Main />,
   document.getElementById('app')
 );
 
-// This file is required by the index.html file and will
-// be executed in the renderer process for that window.
-// All of the Node.js APIs are available in this process.
-// const { ipcRenderer } = require ('electron');
 
 // document.addEventListener('click', event => {
 //   event.preventDefault ();

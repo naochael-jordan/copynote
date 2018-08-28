@@ -39,20 +39,22 @@ function createWindow() {
     mainWindow.hide();
   });
 
-  globalShortcut.register("CommandOrControl+Shift+V", function () {
-    mainWindow.show();
-  });
-
-  ipcMain.on('dismiss', function (hoge) {
+  ipcMain.on('dismiss', function (value, aaa) {
     app.hide();
-    robot.typeString('hogehoge');
+    console.log(value, aaa);
+    robot.typeString(aaa);
   });
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', function () {
+  // createWindow();
+  globalShortcut.register("CommandOrControl+Shift+V", function () {
+    createWindow();
+  });
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
