@@ -2,11 +2,11 @@
   "name": "copynote",
   "version": "1.0.0",
   "description": "clipboard manager(Electron) for Mac",
-  "main": "./dest/main/main.js",
+  "main": "./dist/main/main.js",
   "scripts": {
     "start": "electron .",
     "rebuild": "npm rebuild --runtime=electron --target=2.0.8 --disturl=https://atom.io/download/atom-shell --abi=48",
-    "watch": "babel --watch --out-dir dest src"
+    "watch": "babel --watch --out-dir dist src"
   },
   "repository": {
     "type": "git",
@@ -26,6 +26,8 @@
     "electron": "^2.0.8"
   },
   "dependencies": {
+    "electron-clipboard-watcher": "^1.0.1",
+    "nedb": "^1.8.0",
     "photon": "github:connors/photon",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",

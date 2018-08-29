@@ -6,9 +6,3 @@ render(
   <Main />,
   document.getElementById('app')
 );
-
-
-// document.addEventListener('click', event => {
-//   event.preventDefault ();
-//   ipcRenderer.send ('dismiss', 'fugaaaa');
-// });

@@ -3,8 +3,7 @@ const { ipcRenderer } = require ('electron');
 
 function onClick() {
   const storage = localStorage.getItem('copynote');
-  let value = typeof storage === 'number' ? Number(storage) : 0;
-  value += 1;
+  let value = Number(storage) + 1;
   localStorage.setItem('copynote', value);
   ipcRenderer.send ('dismiss', value);
 }
