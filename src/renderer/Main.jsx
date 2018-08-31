@@ -1,17 +1,47 @@
-import React from 'react';
+import React, { Component } from 'react';
 const { ipcRenderer } = require ('electron');
+const Datastore = require('nedb');
 
-function onClick() {
-  const storage = localStorage.getItem('copynote');
-  let value = Number(storage) + 1;
-  localStorage.setItem('copynote', value);
-  ipcRenderer.send ('dismiss', value);
+class Main extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      copyedItems: [],
+    };
+  }
+
+  componentWillMount() {
+    const db = new Datastore({
+      filename: 'db/data.db',
+      autoload: true,
+      timestampData: true,
+    });
+
+    db.find({}).sort({ updatedAt: -1 }).exec((err, docs) => {
+      this.setState({
+        copyedItems: docs
+      });
+    })
+  }
+
+  onClick(text) {
+    ipcRenderer.send('dismiss', text);
+  }
+
+  render() {
+    return (
+      <ul>
+        {this.state.copyedItems.map((item, index) => (
+          <li
+            onClick={() => this.onClick(item.text)}
+            key={index}>
+            {item.text}
+          </li>
+        ))}
+      </ul>
+    );
+  }
 }
-
-const Main = () => (
-  <div onClick={onClick}>
-    hogefuga
-  </div>
-);
 
 export default Main;
