@@ -20,7 +20,7 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    show: false,
+    // show: false,
     frame: false
   })
 
@@ -38,10 +38,11 @@ function createWindow () {
 }
 
 app.on('ready', () => {
-  createWindow();
+  // createWindow();
 
-  globalShortcut.register("CommandOrControl+Shift+V", () => {
-    mainWindow.show();
+  globalShortcut.register("CommandOrControl+Shift+B", () => {
+    // mainWindow.show();
+    createWindow();
   });
 });
 
@@ -66,12 +67,34 @@ clipboard
         text: clipboard.readText()
       };
 
-      db.insert(doc, (err, newDocs) => {});
+      db.insert(doc, (err, newDocs) => {
+        // console.log(1111, newDocs)
+      });
+
+      // 履歴が100件超えたら超えた分は削除する
+      db.find({}, (err, docs) => {
+        // console.log(docs.length, docs)
+        if (docs.length > 100) {
+          db.find({}).sort({ updatedAt: 1 }).exec((err, docs) => {
+            db.remove({ text: docs[0].text }, {}, (err, numRemoved) => {
+              // console.log('numRemoved: ', numRemoved);
+            });
+          })
+        }
+      })
   })
   .startWatching();
 
 // rendererプロセスからの通知を監視
-ipcMain.on('dismiss', (event, value) => {
+ipcMain.on('dismiss', (event, text) => {
   app.hide();
-  robot.typeString(value);
+  mainWindow.hide();
+
+  clipboard.writeText(text);
+  robot.typeString(clipboard.readText());
+
+  // 選択した文字列の履歴は消去する
+  db.remove({ text }, { multi: true }, (err, numRemoved) => {
+    // console.log('numRemoved: ', numRemoved);
+  });
 });

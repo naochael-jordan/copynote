@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-const { ipcRenderer } = require ('electron');
+const { ipcRenderer, clipboard } = require ('electron');
 const Datastore = require('nedb');
 
 class Main extends Component {
@@ -26,6 +26,7 @@ class Main extends Component {
   }
 
   onClick(text) {
+    // clipboard.writeText(text);
     ipcRenderer.send('dismiss', text);
   }
 
