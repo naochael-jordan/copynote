@@ -2,13 +2,16 @@ const {
   app,
   BrowserWindow,
   globalShortcut,
-  ipcMain
+  ipcMain,
+  Menu,
+  Tray,
 } = require('electron');
 const clipboard = require('electron-clipboard-extended')
 const robot = require("robotjs");
 const Datastore = require('nedb');
 
 let mainWindow
+let appIcon = null
 
 const db = new Datastore({
   filename: 'db/data.db',
@@ -18,15 +21,15 @@ const db = new Datastore({
 
 function createWindow () {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    // show: false,
+    width: 1,
+    height: 1,
+    show: false,
     frame: false
   })
 
   mainWindow.loadFile('index.html')
 
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', function () {
     mainWindow = null
@@ -44,6 +47,16 @@ app.on('ready', () => {
     // mainWindow.show();
     createWindow();
   });
+
+  // 右上のメニューを作る
+  appIcon = new Tray('./assets/images/icon.png')
+  const contextMenu = Menu.buildFromTemplate([
+    {label: 'Item1', type: 'radio'},
+    {label: 'Item2', type: 'radio'}
+  ])
+
+  // Call this again for Linux because we modified the context menu
+  appIcon.setContextMenu(contextMenu)
 });
 
 app.on('window-all-closed', function () {
@@ -86,15 +99,22 @@ clipboard
   .startWatching();
 
 // rendererプロセスからの通知を監視
-ipcMain.on('dismiss', (event, text) => {
-  app.hide();
-  mainWindow.hide();
+ipcMain.on('dismiss', (event, { text, index}) => {
+  // app.hide();
+  // mainWindow.hide();
 
   clipboard.writeText(text);
   robot.typeString(clipboard.readText());
 
-  // 選択した文字列の履歴は消去する
-  db.remove({ text }, { multi: true }, (err, numRemoved) => {
-    // console.log('numRemoved: ', numRemoved);
-  });
+  // 最初の履歴以外で、選択した文字列の履歴は消去する
+  if (index !== 0) {
+    db.remove({ text }, { multi: true }, (err, numRemoved) => {
+      // console.log('numRemoved: ', numRemoved);
+    });
+  }
 });
+
+// デバック用で一旦、履歴を全部消したい時
+// db.remove({}, { multi: true }, (err, numRemoved) => {
+//   console.log('numRemoved: ', numRemoved);
+// });

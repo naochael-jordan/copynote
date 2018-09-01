@@ -1,6 +1,36 @@
 import React, { Component } from 'react';
-const { ipcRenderer, clipboard } = require ('electron');
+const { ipcRenderer, remote } = require ('electron');
 const Datastore = require('nedb');
+const Menu = remote.Menu;
+const MenuItem = remote.MenuItem;
+
+const menu = new Menu();
+const db = new Datastore({
+  filename: 'db/data.db',
+  autoload: true,
+});
+
+db.find({}).sort({ updatedAt: -1 }).exec((err, docs) => {
+  docs.forEach((doc, index) => {
+    menu.append(
+      new MenuItem({
+        label: doc.text,
+        click: function(menu) {
+          ipcRenderer.send('dismiss', {
+            text: menu.label,
+            index,
+          });
+        }
+      })
+    );
+  });
+
+  // コンテキストメニューを開く
+  menu.popup(remote.getCurrentWindow());
+})
+
+// menu.append(new MenuItem({ type: 'separator' }));
+// menu.append(new MenuItem({ label: 'MenuItem2', type: 'checkbox', checked: true }));
 
 class Main extends Component {
   constructor() {
@@ -27,7 +57,8 @@ class Main extends Component {
 
   onClick(text) {
     // clipboard.writeText(text);
-    ipcRenderer.send('dismiss', text);
+    // ipcRenderer.send('dismiss', text);
+    menu.popup(remote.getCurrentWindow());
   }
 
   render() {
