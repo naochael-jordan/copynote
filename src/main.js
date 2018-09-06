@@ -48,15 +48,35 @@ app.on('ready', () => {
     createWindow();
   });
 
+  const LABEL_LENGTH_LIMIT = 20;
+
+  function trancate(text) {
+    return text.length <= LABEL_LENGTH_LIMIT ? text : `${text.substring(0, LABEL_LENGTH_LIMIT)}...`;
+  }
+
   // 右上のメニューを作る
   appIcon = new Tray('./assets/images/icon.png')
-  const contextMenu = Menu.buildFromTemplate([
-    {label: 'Item1', type: 'radio'},
-    {label: 'Item2', type: 'radio'}
-  ])
+  let items = [];
+  db.find({}).sort({ updatedAt: -1 }).exec((err, docs) => {
+    docs.forEach((doc, index) => {
+      items.push({
+        label: trancate(doc.text),
+        click: function(menu) {
+          // clipboard.writeText(doc.text);
+          // robot.typeString(clipboard.readText());
+          // removeSelectedItem({
+          //   text: doc.text,
+          //   index,
+          // });
+        }
+      })
+    });
 
-  // Call this again for Linux because we modified the context menu
-  appIcon.setContextMenu(contextMenu)
+    const contextMenu = Menu.buildFromTemplate(items);
+
+    // Call this again for Linux because we modified the context menu
+    appIcon.setContextMenu(contextMenu)
+  });
 });
 
 app.on('window-all-closed', function () {
@@ -99,22 +119,26 @@ clipboard
   .startWatching();
 
 // rendererプロセスからの通知を監視
-ipcMain.on('dismiss', (event, { text, index}) => {
+ipcMain.on('dismiss', async (event, { text, index}) => {
   // app.hide();
   // mainWindow.hide();
+  await removeSelectedItem({ text });
 
   clipboard.writeText(text);
-  robot.typeString(clipboard.readText());
+  robot.keyTap('v', 'command');
 
-  // 最初の履歴以外で、選択した文字列の履歴は消去する
-  if (index !== 0) {
-    db.remove({ text }, { multi: true }, (err, numRemoved) => {
-      // console.log('numRemoved: ', numRemoved);
-    });
+  // 最初の履歴はクリップボード更新がなくtext-changedが発火しないので、DB保存を手動でする
+  if (index === 0) {
+    db.insert({ text });
   }
 });
 
-// デバック用で一旦、履歴を全部消したい時
-// db.remove({}, { multi: true }, (err, numRemoved) => {
-//   console.log('numRemoved: ', numRemoved);
-// });
+function removeSelectedItem({ text, index }) {
+  console.log(text)
+  return new Promise(resolve => {
+    db.remove({ text }, { multi: true }, (err, numRemoved) => {
+      console.log('numRemoved: ', numRemoved);
+      resolve();
+    });
+  })
+}

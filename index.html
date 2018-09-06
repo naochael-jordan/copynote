@@ -5,8 +5,6 @@
     <title>CopyNote</title>
   </head>
   <body>
-    <!-- <div id="app"></div> -->
-
     <script>
       const { ipcRenderer, remote } = require ('electron');
       const Datastore = require('nedb');
@@ -32,7 +30,7 @@
               label: trancate(doc.text),
               click: function(menu) {
                 ipcRenderer.send('dismiss', {
-                  text: menu.label,
+                  text: doc.text,
                   index,
                 });
               }
@@ -43,8 +41,6 @@
         // コンテキストメニューを開く
         menu.popup(remote.getCurrentWindow());
       });
-
-      // require('./dist/renderer/renderer.js')
     </script>
   </body>
 </html>

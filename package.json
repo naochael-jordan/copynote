@@ -2,7 +2,7 @@
   "name": "copynote",
   "version": "1.0.0",
   "description": "clipboard manager(Electron) for Mac",
-  "main": "./dist/main/main.js",
+  "main": "./dist/main.js",
   "scripts": {
     "start": "electron .",
     "rebuild": "npm rebuild --runtime=electron --target=2.0.8 --disturl=https://atom.io/download/atom-shell --abi=48",
@@ -26,6 +26,7 @@
     "electron": "^2.0.8"
   },
   "dependencies": {
+    "electron-clipboard-extended": "^1.1.1",
     "electron-clipboard-watcher": "^1.0.1",
     "nedb": "^1.8.0",
     "photon": "github:connors/photon",
