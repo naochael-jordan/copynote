@@ -31,7 +31,7 @@
           new MenuItem({
             label: trancate(doc.text),
             click: function (menu) {
-              ipcRenderer.send('dismiss', {
+              ipcRenderer.send('onMenuItemClick', {
                 text: doc.text,
                 index,
               });
