@@ -4,9 +4,10 @@
   "description": "clipboard manager(Electron) for Mac",
   "main": "./dist/main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "electron dist",
     "rebuild": "npm rebuild --runtime=electron --target=2.0.8 --disturl=https://atom.io/download/atom-shell --abi=48",
-    "watch": "babel --watch --out-dir dist src"
+    "watch": "babel --watch --out-dir dist src",
+    "package": "electron-packager dist --platform=darwin --all --out=release"
   },
   "repository": {
     "type": "git",
@@ -23,7 +24,8 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
-    "electron": "^2.0.8"
+    "electron": "^2.0.8",
+    "electron-packager": "^12.2.0"
   },
   "dependencies": {
     "electron-clipboard-extended": "^1.1.1",
