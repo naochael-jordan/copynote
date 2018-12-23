@@ -26,14 +26,5 @@
     "babel-preset-react": "^6.24.1",
     "electron": "^2.0.8",
     "electron-packager": "^12.2.0"
-  },
-  "dependencies": {
-    "electron-clipboard-extended": "^1.1.1",
-    "electron-clipboard-watcher": "^1.0.1",
-    "nedb": "^1.8.0",
-    "photon": "github:connors/photon",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
-    "robotjs": "^0.5.1"
   }
 }
