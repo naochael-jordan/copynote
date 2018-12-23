@@ -6,7 +6,6 @@
   "scripts": {
     "start": "electron dist",
     "rebuild": "npm rebuild --runtime=electron --target=2.0.8 --disturl=https://atom.io/download/atom-shell --abi=48",
-    "watch": "babel --watch --out-dir dist src",
     "package": "electron-packager dist --platform=darwin --all --out=release"
   },
   "repository": {
@@ -21,9 +20,6 @@
   },
   "homepage": "https://github.com/naochael-jordan/copynote#readme",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
     "electron": "^2.0.8",
     "electron-packager": "^12.2.0"
   }
